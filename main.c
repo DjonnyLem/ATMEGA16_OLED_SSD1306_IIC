@@ -3,29 +3,32 @@
 // Цель: разобрать принцип инициализации дисплея, отражения информации на дисплее, работа по протоколу I2C
 #include "main.h"
 
-#define i2c_PORT	PORTC
-#define i2c_DDR		DDRC
-#define i2c_SCL		1
-#define i2c_SDA		2
+//#define i2c_PORT	PORTC
+//#define i2c_DDR		DDRC
+//#define i2c_SCL		PC0
+//#define i2c_SDA		PC1
 
-int main(void)
-{
+int main(void) {
+	  
+    OLED_Init();  //initialize the OLED
+    OLED_Clear(); //clear the display (for good measure)
+    
+    while (1) {
+        
+        OLED_SetCursor(0, 0);        //set the cursor position to (0, 0)
+        OLED_Printf("Hello World!"); //Print out some text
 
-
-	while(1)
-	{
-		
-		
-		
-	}
-
-
-};
+    }
+    
+    return 0; // never reached
+}
 
 
 /********************************************************************
 * 	ИНИЦИАЛИЗАЦИЯ ПОРТОВ
 *********************************************************************/
+
+/*
 void Init_Port(void)
 {
 	DDRA = 0b00000000; // БИТ ПОРТА A НА ВХОД канал АЦП
@@ -35,6 +38,6 @@ void Init_Port(void)
 //i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
 //i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
 };	
-	
+	*/
 
-}	
+
