@@ -6,6 +6,10 @@
 //  Copyright © 2017 prestonsundar. All rights reserved.
 //
 
+#define F_CPU 8000000UL
+
+
+#include "main.h"
 #include <stdio.h>
 #include "SSD1306.h"
 #include <stdio.h>
@@ -15,7 +19,7 @@
 #include <util/delay.h>
 
 #include "i2c.h"
-
+#include "main.h"
 
 
 

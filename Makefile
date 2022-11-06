@@ -6,7 +6,7 @@ CFLAGS=-Wall -g -Os -mmcu=${MCU}
 #CFLAGS=-Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 TARGET=main
 
-SOURCE_FILES=main.c #dht11.c lcd_hd44780.c 
+SOURCE_FILES=main.c SSD1306.c i2c.c 
 all:
 	${CC} ${CFLAGS} -o ${TARGET}.o ${SOURCE_FILES}
 	${OBJCOPY} -j .text -j .data -O ihex ${TARGET}.o ${TARGET}.hex

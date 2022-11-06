@@ -3,12 +3,17 @@
 // Цель: разобрать принцип инициализации дисплея, отражения информации на дисплее, работа по протоколу I2C
 #include "main.h"
 
-//#define i2c_PORT	PORTC
-//#define i2c_DDR		DDRC
-//#define i2c_SCL		PC0
-//#define i2c_SDA		PC1
+#define i2c_PORT    PORTC
+#define i2c_DDR		DDRC
+#define i2c_SCL		PC0
+#define i2c_SDA		PC1
 
 int main(void) {
+
+
+    i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
+    i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
+
 	  
     OLED_Init();  //initialize the OLED
     OLED_Clear(); //clear the display (for good measure)
@@ -16,7 +21,7 @@ int main(void) {
     while (1) {
         
         OLED_SetCursor(0, 0);        //set the cursor position to (0, 0)
-        OLED_Printf("Hello World!"); //Print out some text
+        OLED_Printf("Hi, Artem Lem!"); //Print out some text
 
     }
     
@@ -35,8 +40,8 @@ void Init_Port(void)
 	PORTA |=(1<<PA0); //= 0b00000001; //УСТАНАВЛИВАЕМ В БИТЕ ПОРТА A ПОДТЯЖКУ
 //PC1 PC0
 
-//i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
-//i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
+i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
+i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
 };	
 	*/
 

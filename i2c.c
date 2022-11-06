@@ -9,7 +9,7 @@
 
 #include <avr/io.h>
 #include "i2c.h"
-
+#include "main.h"
 static bool masterMode;
 
 void i2c_init(void)

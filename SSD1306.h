@@ -8,7 +8,7 @@
 
 #ifndef SSD1306_h
 #define SSD1306_h
-
+#include "main.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
