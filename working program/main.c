@@ -3,16 +3,6 @@
 // Цель: разобрать принцип инициализации дисплея, отражения информации на дисплее, работа по протоколу I2C
 #include "main.h"
 
-// Операции с битами:
-#define   SetBit(reg, bit)           reg = reg | (1<<bit)            
-#define   ClearBit(reg, bit)         reg = reg & (~(1<<bit))
-#define   InvBit(reg, bit)           reg ^= (1<<bit)
-#define   BitIsSet(reg, bit)       ((reg &  (1<<bit)) != 0)
-#define   BitIsClear(reg, bit)     ((reg &  (1<<bit)) == 0)
-
-
-
-
 #define i2c_PORT    PORTC
 #define i2c_DDR		DDRC
 #define i2c_SCL		PC0
