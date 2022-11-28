@@ -3,12 +3,6 @@
 // Цель: разобрать принцип инициализации дисплея, отражения информации на дисплее, работа по протоколу I2C
 #include "main.h"
 
-// Операции с битами:
-#define   SetBit(reg, bit)           reg = reg | (1<<bit)            
-#define   ClearBit(reg, bit)         reg = reg & (~(1<<bit))
-#define   InvBit(reg, bit)           reg ^= (1<<bit)
-#define   BitIsSet(reg, bit)       ((reg &  (1<<bit)) != 0)
-#define   BitIsClear(reg, bit)     ((reg &  (1<<bit)) == 0)
 
 
 
@@ -21,17 +15,30 @@
 int main(void) {
 
 
-    i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
-    i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
-
+    Init_Port();
+    I2C_Init();
+    I2C_StartCondition();
+    unsigned char temp_TWSR = TWSR;
+     temp_TWSR &= (~(1<<2)|(1<<1)|(1<<0));
+	
+    if (temp_TWSR == 0x08)
+    {
+    SetBit(DDRD,6);
+    SetBit(PORTD,6);
+    }
+    else
+    {
+     SetBit(DDRD,5);
+     SetBit(PORTD,5);
+    }
 	  
-    OLED_Init();  //initialize the OLED
-    OLED_Clear(); //clear the display (for good measure)
+    //OLED_Init();  //initialize the OLED
+    //OLED_Clear(); //clear the display (for good measure)
     
     while (1) {
         
-        OLED_SetCursor(0, 0);        //set the cursor position to (0, 0)
-        OLED_Printf("Hi, Artem Lem!"); //Print out some text
+        //OLED_SetCursor(0, 0);        //set the cursor position to (0, 0)
+        //OLED_Printf("Hi, Artem Lem!"); //Print out some text
 
     }
     
@@ -43,16 +50,12 @@ int main(void) {
 * 	ИНИЦИАЛИЗАЦИЯ ПОРТОВ
 *********************************************************************/
 
-/*
+
 void Init_Port(void)
 {
-	DDRA = 0b00000000; // БИТ ПОРТА A НА ВХОД канал АЦП
-	PORTA |=(1<<PA0); //= 0b00000001; //УСТАНАВЛИВАЕМ В БИТЕ ПОРТА A ПОДТЯЖКУ
-//PC1 PC0
+    i2c_PORT |= (1<<i2c_SCL)|(1<<i2c_SDA);	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
+    i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
+}	
 
-i2c_PORT |= 1<<i2c_SCL|1<<i2c_SDA;	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
-i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
-};	
-	*/
 
 

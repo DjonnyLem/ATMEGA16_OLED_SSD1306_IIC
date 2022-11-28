@@ -131,11 +131,11 @@ avrdude done. Thank you.
 
 
 !!! 
-sudo avrdude -p m16 -c avr911  - подключение МК к программатору
+ sudo avrdude -p m16 -c avr911 -P /dev/ttyUSB0  - подключение МК к программатору
 
 avrdude -p t13 -c usbasp -U lfuse:r:lfuse.txt:h
 cat lfuse.txt
 
 !!!
-avrdude -p m16 -c avr911 -U lfuse:r:lfuse.txt:h
+avrdude -p m16 -c avr911 -P /dev/ttyUSB0 -B 19200 -U lfuse:r:lfuse.txt:h
 cat lfuse.txt

@@ -8,8 +8,8 @@
 #define BLINK_DDR 	DDRD 
 #define LED_PIN		PIND
 #define BLINK_LED 	6	
-
-volatile unsigned int CountBlink =500;  // Интервал 500*0,001 сек = 0,5 сек => 500mc
+#define BLINK 	500	
+volatile unsigned int CountBlink =BLINK;  // Интервал 500*0,001 сек = 0,5 сек => 500mc
 
 
 
@@ -22,10 +22,11 @@ volatile unsigned int CountBlink =500;  // Интервал 500*0,001 сек = 0,5 сек => 5
 ISR(TIMER0_COMP_vect)		//Обработчик прерывания таймера по совпадению
 	{
 	cli();	//запрещаем прерывания
-	ADCSRA |=(1 << ADSC); // Разрешаем прерывания от АЦП	
+	
 	if (CountBlink == 0)
 		{
-			InvBit(BLINK_PORT, BLINK_LED);		// #define   InvBit(reg, bit)           reg ^= (1<<bit)
+			InvBit(BLINK_PORT, BLINK_LED);		// #define   InvBit(reg, bit)  reg ^= (1<<bit) ИНВЕРТИРОВАТЬ БИТ
+            CountBlink =BLINK; 
 		}
 	 
 	CountBlink --;
@@ -44,6 +45,8 @@ int main(void)
 {
     Init_Port();		//Инициализация портов
 	Init_TIMER0_COMP(); //Инициализация таймера по совпадению
+	OCR0 = COUNT_TIMER; //Заносим регистр значение счетчика
+    TCNT0 =0;			//Сбрасываем таймер
     sei();				// Общее разрешение прерываний
 	while(1)
 	{
@@ -52,7 +55,7 @@ int main(void)
 	}
 
 
-};
+}
 
 
 	
@@ -65,6 +68,6 @@ void Init_Port(void)
 	
 	SetBit(BLINK_DDR, BLINK_LED); // БИТ 6 ПОРТА D НА ВЫХОД
 	SetBit(BLINK_PORT, BLINK_LED); //УСТАНАВЛИВАЕМ В БИТЕ 6 ПОРТА D 1 
-};	
+}
 	
 
