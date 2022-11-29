@@ -3,17 +3,38 @@
 // Цель: разобрать принцип инициализации дисплея, отражения информации на дисплее, работа по протоколу I2C
 #include "main.h"
 
+uint8_t CONTROL_I2C = 0;  // переменная для защиты от зависания при использовании I2C, если вдруг при while(!(TWCR&(1<<TWINT))) бит TWINT в регистре TWCR не выставится в 1.
+
+uint8_t status = 0;
+
+/********************************************************************
+* Обработчик прерывания таймера по совпадению
+*********************************************************************/
+
+ISR(TIMER0_COMP_vect)		//Обработчик прерывания таймера по совпадению
+	{
+	cli();					//запрещаем прерывания
+
+	//При обнулении CONTROL_I2C происходит в I2C выход из while с ошибкой
+	if (CONTROL_I2C != 0)
+		{
+			CONTROL_I2C --;		
+		}
+	asm ("nop");
+	sei();					// разрешаем прерывание
+	};
 
 
 
 
-#define i2c_PORT    PORTC
-#define i2c_DDR		DDRC
-#define i2c_SCL		PC0
-#define i2c_SDA		PC1
+
 
 int main(void) {
 
+	OCR0 = COUNT_TIMER; //Заносим регистр значение счетчика
+    TCNT0 =0;			//Сбрасываем таймер
+
+	sei();				// Общее разрешение прерываний
 
     Init_Port();
     I2C_Init();
@@ -23,26 +44,38 @@ int main(void) {
 	
     if (temp_TWSR == 0x08)
     {
-    SetBit(DDRD,6);
-    SetBit(PORTD,6);
+    asm ("nop");
+	//SetBit(DDRD,6);
+    //SetBit(PORTD,6);
     }
     else
     {
-     SetBit(DDRD,5);
-     SetBit(PORTD,5);
+    asm ("nop"); 
+	//SetBit(DDRD,5);
+    //SetBit(PORTD,5);
     }
 	  
-    //OLED_Init();  //initialize the OLED
-    //OLED_Clear(); //clear the display (for good measure)
+
     
-    while (1) {
+    while (1) 
+	{
+	switch (status)
+		{
+  		case 15: 
+		{
+		PORTD = 0b10001111; //  7 бит 1 - обрабатываем ошибку. В битах 0-3 15 в двоичном выражении
+		};
+    	break;
+
+	  
+  		//default: ;
+    	//break;
+		}
         
-        //OLED_SetCursor(0, 0);        //set the cursor position to (0, 0)
-        //OLED_Printf("Hi, Artem Lem!"); //Print out some text
 
     }
     
-    return 0; // never reached
+    return 0; 
 }
 
 
@@ -53,8 +86,14 @@ int main(void) {
 
 void Init_Port(void)
 {
-    i2c_PORT |= (1<<i2c_SCL)|(1<<i2c_SDA);	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
-    i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);
+	i2c_DDR &=~(1<<i2c_SCL|1<<i2c_SDA);    
+	i2c_PORT |= (1<<i2c_SCL)|(1<<i2c_SDA);	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
+    
+	
+	DDRD = 	0b11111111; //на выход
+	PORTD = 0b00000000; //
+
+
 }	
 
 
