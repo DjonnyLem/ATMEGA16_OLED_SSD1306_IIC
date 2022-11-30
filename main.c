@@ -45,14 +45,14 @@ int main(void) {
     if (temp_TWSR == 0x08)
     {
     asm ("nop");
-	//SetBit(DDRD,6);
-    //SetBit(PORTD,6);
+	SetBit(DDRD,6);
+    SetBit(PORTD,6);
     }
     else
     {
     asm ("nop"); 
-	//SetBit(DDRD,5);
-    //SetBit(PORTD,5);
+	SetBit(DDRD,5);
+    SetBit(PORTD,5);
     }
 	  
 
