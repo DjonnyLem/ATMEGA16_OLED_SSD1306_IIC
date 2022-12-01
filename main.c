@@ -45,14 +45,13 @@ int main(void) {
     if (temp_TWSR == 0x08)
     {
     asm ("nop");
-	SetBit(DDRD,6);
-    SetBit(PORTD,6);
+	//SetBit(DDRD,6);
+    SetBit(PORTD,1);
     }
     else
     {
-    asm ("nop"); 
-	SetBit(DDRD,5);
-    SetBit(PORTD,5);
+    //SetBit(DDRD,5);
+    SetBit(PORTD,0);
     }
 	  
 
@@ -66,8 +65,11 @@ int main(void) {
 		PORTD = 0b10001111; //  7 бит 1 - обрабатываем ошибку. В битах 0-3 15 в двоичном выражении
 		};
     	break;
-
-	  
+		case 1: 
+		{
+		PORTD |= (1<<7)|(1<<6)|(1<<5)|(1<<4); //0b11110000; // 
+		};
+    	break;
   		//default: ;
     	//break;
 		}
