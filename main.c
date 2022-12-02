@@ -16,9 +16,9 @@ ISR(TIMER0_COMP_vect)		//Обработчик прерывания таймера по совпадению
 	cli();					//запрещаем прерывания
 
 	//При обнулении CONTROL_I2C происходит в I2C выход из while с ошибкой
-	if (CONTROL_I2C != 0)
+	if (CONTROL_I2C == 0)
 		{
-			CONTROL_I2C --;		
+			CONTROL_I2C = 1;		
 		}
 	asm ("nop");
 	sei();					// разрешаем прерывание
@@ -45,13 +45,13 @@ int main(void) {
     if (temp_TWSR == 0x08)
     {
     asm ("nop");
-	//SetBit(DDRD,6);
-    SetBit(PORTD,1);
+	//SetBit(DDRA,6);
+    SetBit(PORTA,1);
     }
     else
     {
-    //SetBit(DDRD,5);
-    SetBit(PORTD,0);
+    //SetBit(DDRA,5);
+    SetBit(PORTA,0);
     }
 	  
 
@@ -62,12 +62,12 @@ int main(void) {
 		{
   		case 15: 
 		{
-		PORTD = 0b10001111; //  7 бит 1 - обрабатываем ошибку. В битах 0-3 15 в двоичном выражении
+		PORTA = 0b10001111; //  7 бит 1 - обрабатываем ошибку. В битах 0-3 15 в двоичном выражении
 		};
     	break;
 		case 1: 
 		{
-		PORTD |= (1<<7)|(1<<6)|(1<<5)|(1<<4); //0b11110000; // 
+		PORTA |= (1<<7)|(1<<6)|(1<<5)|(1<<4); //0b11110000; // 
 		};
     	break;
   		//default: ;
@@ -92,8 +92,8 @@ void Init_Port(void)
 	i2c_PORT |= (1<<i2c_SCL)|(1<<i2c_SDA);	// Включим подтяжку на ноги, вдруг юзер на резисторы пожмотился
     
 	
-	DDRD = 	0b11111111; //на выход
-	PORTD = 0b00000000; //
+	DDRA = 	0b11111111; //на выход
+	PORTA = 0b00000000; //
 
 
 }	

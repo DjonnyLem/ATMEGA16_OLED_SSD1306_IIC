@@ -20,6 +20,7 @@
 #define i2c_SDA		PC1
 #define COUNT_TIMER 125    // значение счетчика таймера для прерывания; COUNT_TIMER 125 ~ каждые 1mc
 #define VALUE_CONTROL_I2C 5	//значение переменной CONTROL_I2C, что равно 5 * 1mc = 5mc
+#define VALUE_CNT_STATUS 5
 
 /* БИТОВЫЕ ОПЕРАЦИИ ============================================*/
 #define   SetBit(reg, bit)           reg = reg | (1<<bit)		// УСТАНОВИТЬ БИТ            
