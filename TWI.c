@@ -28,13 +28,13 @@ void I2C_StartCondition(void)
 //				|---------------------------TWEN — бит, активирующий шину I2C. Если мы его устанавливаем, то шина I2C начинает пытаться выполнять задание в зависимости от условий.
 	CONTROL_I2C = VALUE_CONTROL_I2C; //защита от зависания при while. Если в течении 5ms не будет выставлен в 1 бит TWCR
 				
-	while((!(TWCR&(1<<TWINT))) || CNT_STATUS != 0) //подождем пока установится TWINT или CONTROL_I2C станет равен 0
+	while((!(TWCR&(1<<TWINT))))// || CNT_STATUS != 0) //подождем пока установится TWINT или CONTROL_I2C станет равен 0
 	{
-		if (CONTROL_I2C == 1)
+		/*if (CONTROL_I2C == 1)
 		{
 			CNT_STATUS --;
 			CONTROL_I2C = 0;
-		}
+		}*/
 	}
 	//CONTROL_I2C = 0; 
 	status = 1;	 	  
