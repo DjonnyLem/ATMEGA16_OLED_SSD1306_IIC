@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+    
+    
+  <CurrentConfigs><Project>ds1307-iar/Debug</Project><Project>ds1307-iar-3/Debug</Project></CurrentConfigs><CurrentProj>ds1307-iar-3</CurrentProj><OverviewSelected>0</OverviewSelected></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>176</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>774</ColumnWidth1><ColumnWidth2>206</ColumnWidth2><ColumnWidth3>51</ColumnWidth3></Build>
+    </Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-26747-22324</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>ds1307-iar</ExpandedNode><ExpandedNode>ds1307-iar-3</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-7651-16072</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>R:\MK_proj\avr_proj\IAR\DS1307-iar-3\twim.c</Filename><XPos>0</XPos><YPos>42</YPos><SelStart>1780</SelStart><SelEnd>1780</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>R:\MK_proj\avr_proj\IAR\DS1307-iar-3\twim.h</Filename><XPos>0</XPos><YPos>48</YPos><SelStart>1758</SelStart><SelEnd>1759</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>R:\MK_proj\avr_proj\IAR\DS1307-iar-3\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>561</SelStart><SelEnd>561</SelEnd></Tab><ActiveTab>2</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0268cf18><key>iaridepm.enu1</key></Toolbar-0268cf18></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>773</Bottom><Right>250</Right><x>-2</x><y>-2</y><xscreen>-2142545</xscreen><yscreen>-2201168</yscreen><sizeHorzCX>-2042464251</sizeHorzCX><sizeHorzCY>-2147480975</sizeHorzCY><sizeVertCX>240229</sizeVertCX><sizeVertCY>756098</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>207</Bottom><Right>1051</Right><x>-2</x><y>-2</y><xscreen>1053</xscreen><yscreen>209</yscreen><sizeHorzCX>1003813</sizeHorzCX><sizeHorzCY>203902</sizeHorzCY><sizeVertCX>199237</sizeVertCX><sizeVertCY>203902</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

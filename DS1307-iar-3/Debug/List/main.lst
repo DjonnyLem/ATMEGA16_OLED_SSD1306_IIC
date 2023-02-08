@@ -1,0 +1,333 @@
+###############################################################################
+#                                                                             #
+#                                                       21/Nov/2013  13:33:53 #
+# IAR Atmel AVR C/C++ Compiler V5.11A/W32, Evaluation Version                 #
+# Copyright 1996-2008 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Source file  =  R:\MK_proj\avr_proj\IAR\DS1307-iar-3\main.c              #
+#    Command line =  R:\MK_proj\avr_proj\IAR\DS1307-iar-3\main.c --cpu=m16    #
+#                    -ms -o R:\MK_proj\avr_proj\IAR\DS1307-iar-3\Debug\Obj\   #
+#                    -lCN R:\MK_proj\avr_proj\IAR\DS1307-iar-3\Debug\List\    #
+#                    --initializers_in_flash -z6 --no_inline --no_cross_call  #
+#                    --no_tbaa --debug -DENABLE_BIT_DEFINITIONS -e -I         #
+#                    "C:\Program Files (x86)\IAR Systems\Embedded Workbench   #
+#                    5.0 Evaluation\avr\INC\" -I "C:\Program Files (x86)\IAR  #
+#                    Systems\Embedded Workbench 5.0                           #
+#                    Evaluation\avr\INC\DLIB\" --eeprom_size 512              #
+#                    --dlib_config "C:\Program Files (x86)\IAR                #
+#                    Systems\Embedded Workbench 5.0                           #
+#                    Evaluation\avr\LIB\DLIB\dlAVR-3s-ec_mul-sf-n.h"          #
+#    List file    =  R:\MK_proj\avr_proj\IAR\DS1307-iar-3\Debug\List\main.lst #
+#    Object file  =  R:\MK_proj\avr_proj\IAR\DS1307-iar-3\Debug\Obj\main.r90  #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+R:\MK_proj\avr_proj\IAR\DS1307-iar-3\main.c
+      1          //***************************************************************************
+      2          //
+      3          //  Author(s)...: Pashgan    http://ChipEnable.Ru   
+      4          //
+      5          //  Target(s)...: mega16
+      6          //
+      7          //  Compiler....: iar 5.11
+      8          //
+      9          //  Description.: работа с TWI модулем  на прерываниях
+     10          //
+     11          //  Data........: 19.11.13 
+     12          //
+     13          //***************************************************************************
+     14          #include "config.h"
+     15          #include <ioavr.h>
+     16          #include <intrinsics.h>
+     17          #include <stdint.h>
+     18          #include "twim.h"
+     19          #include "lcd_lib.h"
+     20          
+     21          #define ASCII_NUL     '0'
+     22          #define DS1307_ADR    104
+     23          #define SIZE_UINT8    3
+     24          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+     25          uint8_t buf[8];
+   \                     buf:
+   \   00000000                      DS 8
+     26          uint8_t sec, min, hour;
+   \                     `sec`:
+   \   00000008                      DS 1
+   \                     min:
+   \   00000009                      DS 1
+   \                     hour:
+   \   0000000A                      DS 1
+     27          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     28          int main( void )
+   \                     main:
+     29          {
+     30             LCD_Init();
+   \   00000000   ........           CALL    LCD_Init
+     31             TWI_MasterInit(100);
+   \   00000004   E604               LDI     R16, 100
+   \   00000006   E010               LDI     R17, 0
+   \   00000008   ........           CALL    TWI_MasterInit
+     32             
+     33             LCD_Goto(0, 0);
+   \   0000000C   E800               LDI     R16, 128
+   \   0000000E   ........           CALL    LCD_WriteCom
+     34             LCD_SendString("iar time:");
+   \   00000012   ....               LDI     R16, LOW(`?<Constant "iar time:">`)
+   \   00000014   ....               LDI     R17, (`?<Constant "iar time:">`) >> 8
+   \   00000016   ........           CALL    LCD_SendString
+     35             
+     36             __enable_interrupt();
+   \   0000001A   9478               SEI
+     37          
+     38             /*подготавливаем сообщение*/
+     39            buf[0] = (DS1307_ADR<<1)|0;  //адресный пакет
+   \   0000001C   ED00               LDI     R16, 208
+   \   0000001E   9300....           STS     buf, R16
+     40            buf[1] = 0;                  //адрес регистра
+   \   00000022   E000               LDI     R16, 0
+   \   00000024   9300....           STS     (buf + 1), R16
+     41            buf[2] = (5<<4)|5;           //значение секунд 
+   \   00000028   E505               LDI     R16, 85
+   \   0000002A   9300....           STS     (buf + 2), R16
+     42            buf[3] = (5<<4)|9;           //значение минут 
+   \   0000002E   E509               LDI     R16, 89
+   \   00000030   9300....           STS     (buf + 3), R16
+     43            buf[4] = 0;                  //значение часов
+   \   00000034   E000               LDI     R16, 0
+   \   00000036   9300....           STS     (buf + 4), R16
+     44             
+     45             /*отправляем его*/
+     46             TWI_SendData(buf, 5);
+   \   0000003A   E025               LDI     R18, 5
+   \   0000003C   ....               LDI     R16, LOW(buf)
+   \   0000003E   ....               LDI     R17, (buf) >> 8
+   \   00000040   ........           CALL    TWI_SendData
+     47             
+     48             while(1){
+     49              
+     50                 /*устанавливаем указатель DS1307 
+     51                 на нулевой адрес*/
+     52                buf[0] = (DS1307_ADR<<1)|0; //адресный пакет
+   \                     ??main_0:
+   \   00000044   ED00               LDI     R16, 208
+   \   00000046   9300....           STS     buf, R16
+     53                buf[1] = 0;                 //адрес регистра   
+   \   0000004A   E000               LDI     R16, 0
+   \   0000004C   9300....           STS     (buf + 1), R16
+     54          
+     55                TWI_SendData(buf, 2);
+   \   00000050   E022               LDI     R18, 2
+   \   00000052   ....               LDI     R16, LOW(buf)
+   \   00000054   ....               LDI     R17, (buf) >> 8
+   \   00000056   ........           CALL    TWI_SendData
+     56             
+     57                /*считываем время с DS1307*/
+     58                buf[0] = (DS1307_ADR<<1)|1;
+   \   0000005A   ED01               LDI     R16, 209
+   \   0000005C   9300....           STS     buf, R16
+     59                TWI_SendData(buf, 5);
+   \   00000060   E025               LDI     R18, 5
+   \   00000062   ....               LDI     R16, LOW(buf)
+   \   00000064   ....               LDI     R17, (buf) >> 8
+   \   00000066   ........           CALL    TWI_SendData
+     60                
+     61                /*переписываем данные буфера 
+     62                драйвера в свой буфер*/
+     63                TWI_GetData(buf, 5);
+   \   0000006A   E025               LDI     R18, 5
+   \   0000006C   ....               LDI     R16, LOW(buf)
+   \   0000006E   ....               LDI     R17, (buf) >> 8
+   \   00000070   ........           CALL    TWI_GetData
+     64                
+     65                sec  = buf[1];
+   \   00000074   9100....           LDS     R16, (buf + 1)
+   \   00000078   9300....           STS     (buf + 8), R16
+     66                min  = buf[2];
+   \   0000007C   9100....           LDS     R16, (buf + 2)
+   \   00000080   9300....           STS     (buf + 9), R16
+     67                hour = buf[3];
+   \   00000084   9100....           LDS     R16, (buf + 3)
+   \   00000088   9300....           STS     (buf + 10), R16
+     68                 
+     69                /*выводим время на LCD*/
+     70                LCD_Goto(0, 1);
+   \   0000008C   EC00               LDI     R16, 192
+   \   0000008E   ........           CALL    LCD_WriteCom
+     71                LCD_WriteData((hour>>4)  + ASCII_NUL);
+   \   00000092   9100....           LDS     R16, (buf + 10)
+   \   00000096   9502               SWAP    R16
+   \   00000098   700F               ANDI    R16, 0x0F
+   \   0000009A   5D00               SUBI    R16, 208
+   \   0000009C   ........           CALL    LCD_WriteData
+     72                LCD_WriteData((hour&0xf) + ASCII_NUL);    
+   \   000000A0   9100....           LDS     R16, (buf + 10)
+   \   000000A4   700F               ANDI    R16, 0x0F
+   \   000000A6   5D00               SUBI    R16, 208
+   \   000000A8   ........           CALL    LCD_WriteData
+     73                LCD_WriteData(':');
+   \   000000AC   E30A               LDI     R16, 58
+   \   000000AE   ........           CALL    LCD_WriteData
+     74                LCD_WriteData((min>>4)  + ASCII_NUL);
+   \   000000B2   9100....           LDS     R16, (buf + 9)
+   \   000000B6   9502               SWAP    R16
+   \   000000B8   700F               ANDI    R16, 0x0F
+   \   000000BA   5D00               SUBI    R16, 208
+   \   000000BC   ........           CALL    LCD_WriteData
+     75                LCD_WriteData((min&0xf) + ASCII_NUL);    
+   \   000000C0   9100....           LDS     R16, (buf + 9)
+   \   000000C4   700F               ANDI    R16, 0x0F
+   \   000000C6   5D00               SUBI    R16, 208
+   \   000000C8   ........           CALL    LCD_WriteData
+     76                LCD_WriteData(':');    
+   \   000000CC   E30A               LDI     R16, 58
+   \   000000CE   ........           CALL    LCD_WriteData
+     77                LCD_WriteData((sec>>4)  + ASCII_NUL);
+   \   000000D2   9100....           LDS     R16, (buf + 8)
+   \   000000D6   9502               SWAP    R16
+   \   000000D8   700F               ANDI    R16, 0x0F
+   \   000000DA   5D00               SUBI    R16, 208
+   \   000000DC   ........           CALL    LCD_WriteData
+     78                LCD_WriteData((sec&0xf) + ASCII_NUL);    
+   \   000000E0   9100....           LDS     R16, (buf + 8)
+   \   000000E4   700F               ANDI    R16, 0x0F
+   \   000000E6   5D00               SUBI    R16, 208
+   \   000000E8   ........           CALL    LCD_WriteData
+     79             
+     80                /*чтобы не мельтешил экран, мальца потупим*/
+     81              
+     82                __delay_cycles(4000000); 
+   \   000000EC   EF0F               LDI     R16, 255
+   \   000000EE   E314               LDI     R17, 52
+   \   000000F0   E02C               LDI     R18, 12
+   \   000000F2   5001               SUBI    R16, 1
+   \   000000F4   4010               SBCI    R17, 0
+   \   000000F6   4020               SBCI    R18, 0
+   \   000000F8   F7E1               BRNE    $-6
+   \   000000FA   C000               RJMP    $+2
+   \   000000FC   0000               NOP
+   \   000000FE   CFA2               RJMP    ??main_0
+     83              
+     84            }
+     85            return 0;
+     86          }
+     87          
+     88          /*вывод числа на LCD*/
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     89          void LCD_Uint8(uint8_t value)
+   \                     LCD_Uint8:
+     90          {
+   \   00000000   ........           CALL    ?PROLOGUE4_L09
+   \   00000004   9723               SBIW    R29:R28, 3
+   \   00000006   2F80               MOV     R24, R16
+     91            char buf[SIZE_UINT8];
+     92            uint8_t i;
+     93            
+     94            for (i = 0; i < SIZE_UINT8; i++){
+   \   00000008   E0A0               LDI     R26, 0
+   \   0000000A   C010               RJMP    ??LCD_Uint8_0
+     95                 buf[i] = (char)((value % 10) + '0');
+   \                     ??LCD_Uint8_1:
+   \   0000000C   E04A               LDI     R20, 10
+   \   0000000E   2F08               MOV     R16, R24
+   \   00000010   ........           CALL    ?UC_DIVMOD_L01
+   \   00000014   5D40               SUBI    R20, 208
+   \   00000016   01FE               MOVW    R31:R30, R29:R28
+   \   00000018   E0B0               LDI     R27, 0
+   \   0000001A   0FEA               ADD     R30, R26
+   \   0000001C   1FFB               ADC     R31, R27
+   \   0000001E   8340               ST      Z, R20
+     96                 value = value/10;
+   \   00000020   E04A               LDI     R20, 10
+   \   00000022   2F08               MOV     R16, R24
+   \   00000024   ........           CALL    ?UC_DIVMOD_L01
+   \   00000028   2F80               MOV     R24, R16
+     97            }
+   \   0000002A   95A3               INC     R26
+   \                     ??LCD_Uint8_0:
+   \   0000002C   30A3               CPI     R26, 3
+   \   0000002E   F370               BRCS    ??LCD_Uint8_1
+     98          
+     99            LCD_WriteData(buf[2]);
+   \   00000030   810A               LDD     R16, Y+2
+   \   00000032   ........           CALL    LCD_WriteData
+    100            LCD_WriteData(buf[1]);
+   \   00000036   8109               LDD     R16, Y+1
+   \   00000038   ........           CALL    LCD_WriteData
+    101            LCD_WriteData(buf[0]); 
+   \   0000003C   8108               LD      R16, Y
+   \   0000003E   ........           CALL    LCD_WriteData
+    102          }
+   \   00000042   9623               ADIW    R29:R28, 3
+   \   00000044   E0E4               LDI     R30, 4
+   \   00000046   ........           JMP     ?EPILOGUE_B4_L09
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "iar time:">>`:
+   \   00000000   616920726974       DB "iar time:"
+   \              656D003A    
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "iar time:">`:
+   \   00000000                      DS 10
+   \   0000000A                      REQUIRE `?<Initializer for <Constant "iar time:">>`
+
+   Maximum stack usage in bytes:
+
+     Function            CSTACK RSTACK
+     --------            ------ ------
+     LCD_Uint8               7      4
+       -> LCD_WriteData      7      2
+       -> LCD_WriteData      7      2
+       -> LCD_WriteData      7      2
+     main                    0      2
+       -> LCD_Init           0      2
+       -> TWI_MasterInit     0      2
+       -> LCD_WriteCom       0      2
+       -> LCD_SendString     0      2
+       -> TWI_SendData       0      2
+       -> TWI_SendData       0      2
+       -> TWI_SendData       0      2
+       -> TWI_GetData        0      2
+       -> LCD_WriteCom       0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+       -> LCD_WriteData      0      2
+
+
+   Segment part sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     buf                              11
+     main                            256
+     LCD_Uint8                        74
+     ?<Initializer for <Constant "iar time:">>
+                                      10
+     ?<Constant "iar time:">          10
+      Others                          12
+
+ 
+ 330 bytes in segment CODE
+  12 bytes in segment INITTAB
+  10 bytes in segment NEAR_I
+  10 bytes in segment NEAR_ID
+  11 bytes in segment NEAR_Z
+ 
+ 340 bytes of CODE memory (+ 12 bytes shared)
+  21 bytes of DATA memory
+
+Errors: none
+Warnings: 1
