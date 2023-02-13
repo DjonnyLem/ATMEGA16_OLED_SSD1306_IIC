@@ -6,6 +6,10 @@
 uint8_t CONTROL_I2C = 0;  // переменная для защиты от зависания при использовании I2C, если вдруг при while(!(TWCR&(1<<TWINT))) бит TWINT в регистре TWCR не выставится в 1.
 
 uint8_t status = 0;
+#define Delay 1000
+static unsigned int DELAY_ms = Delay;
+
+static unsigned int CAUNT_NUM = 0;
 
 /********************************************************************
 * Обработчик прерывания таймера по совпадению
@@ -15,11 +19,31 @@ ISR(TIMER0_COMP_vect)		//Обработчик прерывания таймера по совпадению
 	{
 	cli();					//запрещаем прерывания
 
+	if (DELAY_ms != 0)
+		{
+		DELAY_ms --;	
+		}	
+	else
+		{
+		DELAY_ms = Delay;
+		if (CAUNT_NUM <= 60000)
+			{
+			CAUNT_NUM ++;
+			}
+		else
+			{
+			CAUNT_NUM ++;
+			}
+		}
+	
+
+/*
 	//При обнулении CONTROL_I2C происходит в I2C выход из while с ошибкой
 	if (CONTROL_I2C == 0)
 		{
 			CONTROL_I2C = 1;		
 		}
+*/
 	asm ("nop");
 	sei();					// разрешаем прерывание
 	};
